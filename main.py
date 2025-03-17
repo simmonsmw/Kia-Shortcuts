@@ -176,6 +176,33 @@ def unlock_car():
         print(f"Error in /unlock_car: {e}")
         return jsonify({"error": str(e)}), 500
 
+# Battery Status Endpoint
+@app.route('/battery_status', methods=['GET'])
+def battery_status():
+    print("Received request to /battery_status")
+
+    if request.headers.get("Authorization") != SECRET_KEY:
+        print("Unauthorized request: Missing or incorrect Authorization header")
+        return jsonify({"error": "Unauthorized"}), 403
+
+    try:
+        print("Refreshing vehicle states...")
+        vehicle_manager.update_all_vehicles_with_cached_state()
+
+        # Fetch the battery percentage (State of Charge - SOC)
+        vehicle = vehicle_manager.vehicles.get(VEHICLE_ID)
+        if not vehicle:
+            return jsonify({"error": "Vehicle not found"}), 404
+
+        battery_percentage = vehicle.ev_battery_percentage  # EV battery SOC
+        print(f"Battery SOC: {battery_percentage}%")
+
+        return jsonify({"status": "Success", "battery_percentage": battery_percentage}), 200
+    except Exception as e:
+        print(f"Error in /battery_status: {e}")
+        return jsonify({"error": str(e)}), 500
+
+
 # Lock car endpoint
 @app.route('/lock_car', methods=['POST'])
 def lock_car():
