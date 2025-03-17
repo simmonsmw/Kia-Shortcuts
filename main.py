@@ -44,8 +44,14 @@ if not SECRET_KEY:
 
 # Example vehicle details for direct lookup - moved to environment variables
 VEHICLE_ID = os.environ.get("VEHICLE_ID")
+
+# If VEHICLE_ID is not set, try fetching it dynamically from available vehicles
 if not VEHICLE_ID:
-    raise ValueError("Missing VEHICLE_ID environment variable.")
+    if vehicle_manager.vehicles:
+        VEHICLE_ID = next(iter(vehicle_manager.vehicles.values())).id  # Get first vehicle's ID dynamically
+        print(f"Automatically retrieved VEHICLE_ID: {VEHICLE_ID}")
+    else:
+        raise ValueError("No vehicles found in the account. Please check your Kia API credentials.")
 
 # Log incoming requests
 @app.before_request
