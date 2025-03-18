@@ -120,7 +120,8 @@ def start_climate():
         # Create ClimateRequestOptions object
         climate_options = ClimateRequestOptions(
             set_temp=73,  # Set temperature in Fahrenheit
-            duration=10   # Duration in minutes
+            duration=10,   # Duration in minutes
+            steering_wheel=1 # Duration in minutes
         )
 
         # Start climate control using the VehicleManager's start_climate method
