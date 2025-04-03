@@ -1,6 +1,6 @@
 import os
 from flask import Flask, request, jsonify
-from hyundai_kia_connect_api import VehicleManager, ClimateRequestOptions. Vehicle
+from hyundai_kia_connect_api import VehicleManager, ClimateRequestOptions, Vehicle.
 from hyundai_kia_connect_api.exceptions import AuthenticationError
 
 app = Flask(__name__)
