@@ -196,23 +196,15 @@ def lock_car():
         print(f"Error in /lock_car: {e}")
         return jsonify({"error": str(e)}), 500
 
-
 # Get Vehicle status endpoint
 
 @app.route('/get_vehicle_status', methods=['GET'])
 def get_vehicle_status():
     try:
-        vehicle = vehicle_manager.vehicles[VEHICLE_ID]
-        vehicle.update_vehicle_status()
-        status = vehicle.get_cached_vehicle_status()
-        
-     return jsonify(status.as_dict()), 200
-
+        status = vehicle.get_vehicle_status()
+        return jsonify(status)
     except Exception as e:
-        print(f"[ERROR] get_vehicle_status: {e}")
         return jsonify({'error': str(e)}), 500
-
-
 
 if __name__ == "__main__":
     print("Starting Kia Vehicle Control API...")
