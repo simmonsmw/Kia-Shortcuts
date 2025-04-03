@@ -202,8 +202,9 @@ def lock_car():
 @app.route('/get_vehicle_status', methods=['GET'])
 def get_vehicle_status():
     try:
-        status = vehicle.get_vehicle_status()
-        return jsonify(status)
+status = vehicle.get_vehicle_status()
+return jsonify(status.as_dict())  # Convert to plain dict
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
