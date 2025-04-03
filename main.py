@@ -203,13 +203,24 @@ import asyncio
 @app.route('/get_vehicle_status', methods=['GET'])
 def get_vehicle_status():
     try:
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        result = loop.run_until_complete(fetch_vehicle_status())
-        return jsonify(result), 200
+        # Refresh vehicle data
+        vehicle_manager.check_and_force_update_vehicles(force_refresh_interval=0)
+
+        # Retrieve the vehicle object
+        vehicle = vehicle_manager.vehicles[VEHICLE_ID]
+
+        # Extract desired information
+        vehicle_status = {
+            'model': vehicle.model,
+            'battery_percentage': vehicle.battery_level,
+            'range_miles': vehicle.ev_battery_range,
+        }
+
+        return jsonify(vehicle_status), 200
     except Exception as e:
         print(f"[ERROR] get_vehicle_status: {e}")
         return jsonify({'error': str(e)}), 500
+
 
 
 async def fetch_vehicle_status():
