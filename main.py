@@ -202,12 +202,12 @@ def lock_car():
 def get_vehicle_status():
     try:
         vehicle = vehicle_manager.vehicles[VEHICLE_ID]
-        status = vehicle.get_vehicle_status()
+        vehicle.update_vehicle_status()
+        status = vehicle.get_cached_vehicle_status()
         return jsonify(status.as_dict()), 200
     except Exception as e:
         print(f"[ERROR] get_vehicle_status: {e}")
         return jsonify({'error': str(e)}), 500
-
 
 if __name__ == "__main__":
     print("Starting Kia Vehicle Control API...")
