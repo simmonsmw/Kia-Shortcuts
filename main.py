@@ -202,11 +202,19 @@ def lock_car():
 @app.route('/get_vehicle_status', methods=['GET'])
 def get_vehicle_status():
     try:
-status = vehicle.get_vehicle_status()
-return jsonify(status.as_dict())  # Convert to plain dict
+        vehicle = vehicle_manager.vehicles[VEHICLE_ID]
+        status = vehicle.get_vehicle_status()
+
+        # Force conversion to serializable dict
+        if hasattr(status, "as_dict"):
+            return jsonify(status.as_dict()), 200
+        else:
+            return jsonify(status), 200
 
     except Exception as e:
+        print(f"[ERROR] get_vehicle_status: {e}")
         return jsonify({'error': str(e)}), 500
+
 
 
 if __name__ == "__main__":
