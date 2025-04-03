@@ -198,21 +198,15 @@ def lock_car():
 
 # Get Vehicle status endpoint
 
-import asyncio
-
 @app.route('/get_vehicle_status', methods=['GET'])
 def get_vehicle_status():
     try:
-        # Refresh vehicle data
         vehicle_manager.check_and_force_update_vehicles(force_refresh_interval=0)
-
-        # Retrieve the vehicle object
         vehicle = vehicle_manager.vehicles[VEHICLE_ID]
 
-        # Extract desired information
         vehicle_status = {
             'model': vehicle.model,
-            'battery_percentage': vehicle.battery_level,
+            'battery_percentage': vehicle.battery_percentage,
             'range_miles': vehicle.ev_battery_range,
         }
 
@@ -221,18 +215,6 @@ def get_vehicle_status():
         print(f"[ERROR] get_vehicle_status: {e}")
         return jsonify({'error': str(e)}), 500
 
-
-
-async def fetch_vehicle_status():
-    await vehicle_manager.update()
-    vehicle = vehicle_manager.vehicles[VEHICLE_ID]
-
-    # Build a simplified status dictionary
-    return {
-        'model': vehicle.model,
-        'battery_percentage': vehicle.battery_level,
-        'range_miles': vehicle.ev_battery_range,  # or 'fuel_range' if not EV
-    }
 
 
 if __name__ == "__main__":
