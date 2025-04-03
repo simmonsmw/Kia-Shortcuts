@@ -204,18 +204,23 @@ def get_vehicle_status():
         vehicle_manager.check_and_force_update_vehicles(force_refresh_interval=0)
         vehicle = vehicle_manager.vehicles[VEHICLE_ID]
 
+        # Extract battery and range from status dictionary
+        status = vehicle.status  # a dict returned by the update call
+
+        battery_percentage = status.get("batteryStatus", {}).get("batteryCharge", {}).get("value")
+        ev_range = status.get("evStatus", {}).get("drvDistance", {}).get("value")
+        model = vehicle.model  # this still works as-is
+
         vehicle_status = {
-            'model': vehicle.model,
-            'battery_percentage': vehicle.battery_percentage,
-            'range_miles': vehicle.ev_battery_range,
+            "model": model,
+            "battery_percentage": battery_percentage,
+            "range_miles": ev_range
         }
 
         return jsonify(vehicle_status), 200
     except Exception as e:
         print(f"[ERROR] get_vehicle_status: {e}")
         return jsonify({'error': str(e)}), 500
-
-
 
 if __name__ == "__main__":
     print("Starting Kia Vehicle Control API...")
