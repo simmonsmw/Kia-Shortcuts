@@ -198,15 +198,31 @@ def lock_car():
 
 # Get Vehicle status endpoint
 
+import asyncio
+
 @app.route('/get_vehicle_status', methods=['GET'])
 def get_vehicle_status():
     try:
-        vehicle = vehicle_manager.vehicles[VEHICLE_ID]
-        status = vehicle.get_status()
-        return jsonify(status), 200
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        result = loop.run_until_complete(fetch_vehicle_status())
+        return jsonify(result), 200
     except Exception as e:
         print(f"[ERROR] get_vehicle_status: {e}")
         return jsonify({'error': str(e)}), 500
+
+
+async def fetch_vehicle_status():
+    await vehicle_manager.update()
+    vehicle = vehicle_manager.vehicles[VEHICLE_ID]
+
+    # Build a simplified status dictionary
+    return {
+        'model': vehicle.model,
+        'battery_percentage': vehicle.battery_level,
+        'range_miles': vehicle.ev_battery_range,  # or 'fuel_range' if not EV
+    }
+
 
 if __name__ == "__main__":
     print("Starting Kia Vehicle Control API...")
