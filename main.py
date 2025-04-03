@@ -201,12 +201,12 @@ def lock_car():
 @app.route('/get_vehicle_status', methods=['GET'])
 def get_vehicle_status():
     try:
-        status = vehicle_manager.get_vehicle_status(vehicle_manager.vehicles[VEHICLE_ID])
+        vehicle = vehicle_manager.vehicles[VEHICLE_ID]
+        status = vehicle.get_status()
         return jsonify(status), 200
     except Exception as e:
         print(f"[ERROR] get_vehicle_status: {e}")
         return jsonify({'error': str(e)}), 500
-
 
 if __name__ == "__main__":
     print("Starting Kia Vehicle Control API...")
