@@ -196,7 +196,27 @@ def lock_car():
         print(f"Error in /lock_car: {e}")
         return jsonify({"error": str(e)}), 500
 
-# Get Vehicle status endpoint
+
+# get_vehicle_status endpoint
+
+@app.route('/get_vehicle_status', methods=['GET'])
+def get_vehicle_status():
+    try:
+        vehicle_manager.check_and_force_update_vehicles(force_refresh_interval=0)
+        vehicle = vehicle_manager.vehicles[VEHICLE_ID]
+
+        vehicle_status = {
+            "model": vehicle.model,
+            "battery_percentage": vehicle.ev_battery_percentage,
+            "range_miles": vehicle.ev_driving_range
+        }
+
+        return jsonify(vehicle_status), 200
+    except Exception as e:
+        print(f"[ERROR] get_vehicle_status: {e}")
+        return jsonify({'error': str(e)}), 500
+
+# get Attributes about car status endpoint
 
 @app.route('/debug_vehicle', methods=['GET'])
 def debug_vehicle():
