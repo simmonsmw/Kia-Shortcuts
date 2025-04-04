@@ -87,8 +87,7 @@ def list_vehicles():
                 "name": v.name,
                 "id": v.id,
                 "model": v.model,
-                "year": v.year,
-                "is_locked": v.locked
+                "year": v.year         
 
             }
             for v in vehicles.values()  # Use .values() to get the Vehicle objects
@@ -119,7 +118,7 @@ def start_climate():
 
         # Create ClimateRequestOptions object
         climate_options = ClimateRequestOptions(
-            set_temp=72,  # Set temperature in Fahrenheit
+            set_temp=73,  # Set temperature in Fahrenheit
             duration=10   # Duration in minutes
         )
 
@@ -226,10 +225,7 @@ def get_vehicle_status():
 
 def debug_vehicle():
   
-        if request.headers.get("Authorization") != SECRET_KEY:
-        print("Unauthorized request: Missing or incorrect Authorization header")
-        return jsonify({"error": "Unauthorized"}), 403
-    
+   
     try:
         vehicle = vehicle_manager.vehicles[VEHICLE_ID]
         vehicle_manager.check_and_force_update_vehicles(force_refresh_interval=0)
