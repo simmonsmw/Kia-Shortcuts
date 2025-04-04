@@ -87,7 +87,8 @@ def list_vehicles():
                 "name": v.name,
                 "id": v.id,
                 "model": v.model,
-                "year": v.year         
+                "year": v.year,
+                "is_locked": v.locked
 
             }
             for v in vehicles.values()  # Use .values() to get the Vehicle objects
@@ -118,7 +119,7 @@ def start_climate():
 
         # Create ClimateRequestOptions object
         climate_options = ClimateRequestOptions(
-            set_temp=73,  # Set temperature in Fahrenheit
+            set_temp=72,  # Set temperature in Fahrenheit
             duration=10   # Duration in minutes
         )
 
@@ -202,10 +203,6 @@ def lock_car():
 
 @app.route('/get_vehicle_status', methods=['GET'])
 def get_vehicle_status():
-   
-   if request.headers.get("Authorization") != SECRET_KEY:
-        print("Unauthorized request: Missing or incorrect Authorization header")
-        return jsonify({"error": "Unauthorized"}), 403
     try:
         vehicle_manager.check_and_force_update_vehicles(force_refresh_interval=0)
         vehicle = vehicle_manager.vehicles[VEHICLE_ID]
@@ -223,9 +220,8 @@ def get_vehicle_status():
 
 # get Attributes about car status endpoint
 
+@app.route('/debug_vehicle', methods=['GET'])
 def debug_vehicle():
-  
-   
     try:
         vehicle = vehicle_manager.vehicles[VEHICLE_ID]
         vehicle_manager.check_and_force_update_vehicles(force_refresh_interval=0)
@@ -234,7 +230,6 @@ def debug_vehicle():
         return jsonify({'attributes': attributes}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
 
 # Battery Status Endpoint
 @app.route('/battery_status', methods=['GET'])
@@ -248,6 +243,7 @@ def battery_status():
     try:
         print("Refreshing vehicle states...")
         vehicle_manager.update_all_vehicles_with_cached_state()
+
 
         # Fetch the battery percentage (State of Charge - SOC)
         vehicle = vehicle_manager.vehicles.get(VEHICLE_ID)
