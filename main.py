@@ -247,10 +247,6 @@ return jsonify({
     "model": model,
     "charging": vehicle.ev_battery_is_charging  # 👈 NEW!
 })
-
-
-        })
-
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
