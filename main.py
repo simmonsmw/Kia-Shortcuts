@@ -225,7 +225,8 @@ def get_vehicle_status():
 # get Attributes about car status endpoint
 
 def debug_vehicle():
-     if request.headers.get("Authorization") != SECRET_KEY:
+  
+        if request.headers.get("Authorization") != SECRET_KEY:
         print("Unauthorized request: Missing or incorrect Authorization header")
         return jsonify({"error": "Unauthorized"}), 403
     
@@ -233,17 +234,8 @@ def debug_vehicle():
         vehicle = vehicle_manager.vehicles[VEHICLE_ID]
         vehicle_manager.check_and_force_update_vehicles(force_refresh_interval=0)
 
-        attributes = {}
-        for attr in dir(vehicle):
-            if not attr.startswith('_'):  # Skip private/internal attributes
-                try:
-                    value = getattr(vehicle, attr)
-                    attributes[attr] = str(value)  # Convert safely to string
-                except Exception as inner:
-                    attributes[attr] = f"Error: {str(inner)}"
-
+        attributes = dir(vehicle)
         return jsonify({'attributes': attributes}), 200
-
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
