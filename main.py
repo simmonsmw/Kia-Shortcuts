@@ -122,9 +122,8 @@ def start_climate():
             set_temp=74,  # Set temperature in Fahrenheit
             duration=15,   # Duration in minutes
             defrost=False,
-            heating=True,  # ← main cabin heating
-         //   steering_wheel_heater=True  # ← DIDN't Work :(
-
+            heating=True  # ← main cabin heating
+    
         )
 
         # Start climate control using the VehicleManager's start_climate method
