@@ -211,10 +211,7 @@ last_valid_status = {
 @app.route("/get_vehicle_status", methods=["GET"])
 def get_vehicle_status():
     global last_valid_status
-  if request.headers.get("Authorization") != SECRET_KEY:
-        print("Unauthorized request: Missing or incorrect Authorization header")
-        return jsonify({"error": "Unauthorized"}), 403
-      
+
     try:
         vehicle_manager.check_and_force_update_vehicles(force_refresh_interval=0)
         vehicle = vehicle_manager.vehicles[VEHICLE_ID]
