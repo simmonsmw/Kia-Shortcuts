@@ -229,6 +229,22 @@ def debug_vehicle():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+# get Attributes about car battery endpoint
+@app.route("/battery_only", methods=["GET"])
+def battery_only():
+    try:
+        vehicle_manager = get_vehicle_manager()  # however you auth/connect
+        vehicle = vehicle_manager.vehicles[0]
+        vehicle.update()  # Ensure it's fresh
+
+        return jsonify({
+            "battery_percentage": vehicle.ev_battery_percentage
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 
 if __name__ == "__main__":
     print("Starting Kia Vehicle Control API...")
