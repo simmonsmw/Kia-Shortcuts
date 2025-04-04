@@ -216,7 +216,6 @@ last_valid_status = {
 def get_vehicle_status():
     global last_valid_status
 
-    # 🔐 Check authorization with secret key
     if request.headers.get("Authorization") != SECRET_KEY:
         print("Unauthorized request: Missing or incorrect Authorization header")
         return jsonify({"error": "Unauthorized"}), 403
@@ -228,8 +227,10 @@ def get_vehicle_status():
         battery = vehicle.ev_battery_percentage
         model = vehicle.model
         range_miles = vehicle.ev_driving_range
+        charging = vehicle.ev_battery_is_charging
+        charge_minutes = getattr(vehicle, "ev_estimated_current_charge_duration", None)
 
-        # 💾 Only update cache if range is valid
+        # Cache valid range
         if range_miles and range_miles > 0:
             last_valid_status = {
                 "battery_percentage": battery,
@@ -237,24 +238,19 @@ def get_vehicle_status():
                 "model": model
             }
 
-        # 🕐 Fallback if 0 range
         if range_miles == 0:
             range_miles = last_valid_status.get("range_miles")
-            if battery is None:
-                battery = last_valid_status.get("battery_percentage")
-            if model is None:
-                model = last_valid_status.get("model")
 
         return jsonify({
             "battery_percentage": battery,
             "range_miles": range_miles,
             "model": model,
-            "charging": vehicle.ev_battery_is_charging
+            "charging": charging,
+            "charge_minutes": charge_minutes  # ⏱️ Add this
         })
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 # get Attributes about car status endpoint
 
