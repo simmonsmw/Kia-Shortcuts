@@ -241,10 +241,14 @@ def get_vehicle_status():
         if range_miles == 0:
             range_miles = last_valid_status.get("range_miles")
 
-        return jsonify({
-            "battery_percentage": battery,
-            "range_miles": range_miles,
-            "model": model
+return jsonify({
+    "battery_percentage": battery,
+    "range_miles": range_miles,
+    "model": model,
+    "charging": vehicle.ev_battery_is_charging  # 👈 NEW!
+})
+
+
         })
 
     except Exception as e:
