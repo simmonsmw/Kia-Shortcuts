@@ -212,6 +212,11 @@ last_valid_status = {
 def get_vehicle_status():
     global last_valid_status
 
+    # 🔐 Check authorization with secret key
+    if request.headers.get("Authorization") != SECRET_KEY:
+        print("Unauthorized request: Missing or incorrect Authorization header")
+        return jsonify({"error": "Unauthorized"}), 403
+
     try:
         vehicle_manager.check_and_force_update_vehicles(force_refresh_interval=0)
         vehicle = vehicle_manager.vehicles[VEHICLE_ID]
@@ -220,7 +225,7 @@ def get_vehicle_status():
         model = vehicle.model
         range_miles = vehicle.ev_driving_range
 
-        # 💡 Only cache if range is valid
+        # 💾 Only update cache if range is valid
         if range_miles and range_miles > 0:
             last_valid_status = {
                 "battery_percentage": battery,
@@ -228,7 +233,7 @@ def get_vehicle_status():
                 "model": model
             }
 
-        # Fallback to last known value
+        # 🕐 Fallback if 0 range
         if range_miles == 0:
             range_miles = last_valid_status.get("range_miles")
 
@@ -240,6 +245,7 @@ def get_vehicle_status():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 
 
