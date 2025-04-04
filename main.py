@@ -213,14 +213,14 @@ def get_vehicle_status():
     global last_valid_status
 
     try:
+        vehicle_manager.check_and_force_update_vehicles(force_refresh_interval=0)
         vehicle = vehicle_manager.vehicles[VEHICLE_ID]
-        vehicle.update()
 
         battery = vehicle.ev_battery_percentage
         model = vehicle.model
         range_miles = vehicle.ev_driving_range
 
-        # 💡 Cache if valid range
+        # 💡 Only cache if range is valid
         if range_miles and range_miles > 0:
             last_valid_status = {
                 "battery_percentage": battery,
@@ -228,7 +228,7 @@ def get_vehicle_status():
                 "model": model
             }
 
-        # Use cached if range is 0
+        # Fallback to last known value
         if range_miles == 0:
             range_miles = last_valid_status.get("range_miles")
 
@@ -240,6 +240,7 @@ def get_vehicle_status():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 
 # get Attributes about car status endpoint
