@@ -231,20 +231,32 @@ def debug_vehicle():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# get Attributes about car battery endpoint
-@app.route("/battery_only", methods=["GET"])
-def battery_only():
+# Battery Status Endpoint
+@app.route('/battery_status', methods=['GET'])
+def battery_status():
+    print("Received request to /battery_status")
+
+    if request.headers.get("Authorization") != SECRET_KEY:
+        print("Unauthorized request: Missing or incorrect Authorization header")
+        return jsonify({"error": "Unauthorized"}), 403
+
     try:
-        vehicle_manager = get_vehicle_manager()  # however you auth/connect
-        vehicle = vehicle_manager.vehicles[0]
-        vehicle.update()  # Ensure it's fresh
+        print("Refreshing vehicle states...")
+        vehicle_manager.update_all_vehicles_with_cached_state()
 
-        return jsonify({
-            "battery_percentage": vehicle.ev_battery_percentage
-        })
+        # Fetch the battery percentage (State of Charge - SOC)
+        vehicle = vehicle_manager.vehicles.get(VEHICLE_ID)
+        if not vehicle:
+            return jsonify({"error": "Vehicle not found"}), 404
 
+        battery_percentage = vehicle.ev_battery_percentage  # EV battery SOC
+        print(f"Battery SOC: {battery_percentage}%")
+
+        return jsonify({"status": "Success", "battery_percentage": battery_percentage}), 200
     except Exception as e:
+        print(f"Error in /battery_status: {e}")
         return jsonify({"error": str(e)}), 500
+
 
 
 
