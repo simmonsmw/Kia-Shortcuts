@@ -123,7 +123,8 @@ def start_climate():
             duration=15,   # Duration in minutes
             defrost=False,
             heating=True,  # ← main cabin heating
-            steering_wheel_heater=True  # ← enable this!
+         //   steering_wheel_heater=True  # ← DIDN't Work :(
+
         )
 
         # Start climate control using the VehicleManager's start_climate method
@@ -290,6 +291,18 @@ def battery_status():
         return jsonify({"status": "Success", "battery_percentage": battery_percentage}), 200
     except Exception as e:
         print(f"Error in /battery_status: {e}")
+        return jsonify({"error": str(e)}), 500
+
+# climate options Endpoint
+@app.route("/climate_options_debug", methods=["GET"])
+def climate_options_debug():
+    try:
+        opts = ClimateRequestOptions()
+        return jsonify({
+            "available_attrs": dir(opts),
+            "doc": ClimateRequestOptions.__doc__
+        })
+    except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 
