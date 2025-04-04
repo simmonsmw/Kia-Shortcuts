@@ -231,7 +231,7 @@ def debug_vehicle():
     
     try:
         vehicle = vehicle_manager.vehicles[VEHICLE_ID]
-        vehicle_manager.check_and_force_update_vehicles(force_refresh_interval=60)
+        vehicle_manager.check_and_force_update_vehicles(force_refresh_interval=0)
 
         attributes = {}
         for attr in dir(vehicle):
