@@ -237,28 +237,23 @@ def get_vehicle_status():
                 "model": model
             }
 
- # 🕐 Fallback if 0 range
-if range_miles == 0:
-    range_miles = last_valid_status.get("range_miles")
+        # 🕐 Fallback if 0 range
+        if range_miles == 0:
+            range_miles = last_valid_status.get("range_miles")
+            if battery is None:
+                battery = last_valid_status.get("battery_percentage")
+            if model is None:
+                model = last_valid_status.get("model")
 
-    # fallback battery/model too if needed
-    if battery is None:
-        battery = last_valid_status.get("battery_percentage")
-    if model is None:
-        model = last_valid_status.get("model")
-
-# ✅ Return JSON response (indented inside try)
-return jsonify({
-    "battery_percentage": battery,
-    "range_miles": range_miles,
-    "model": model,
-    "charging": vehicle.ev_battery_is_charging
-})
+        return jsonify({
+            "battery_percentage": battery,
+            "range_miles": range_miles,
+            "model": model,
+            "charging": vehicle.ev_battery_is_charging
+        })
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
 
 
 # get Attributes about car status endpoint
