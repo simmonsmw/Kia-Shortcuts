@@ -124,7 +124,7 @@ def start_climate():
             defrost=False,
             heating=1,
             steering_wheel=1,         # 1 = on, 0 = off
-            front_left_seat=1         # 1 = low, 2 = medium, 3 = high (try 1 first)    
+     #       front_left_seat=1         # 1 = low, 2 = medium, 3 = high (try 1 first)    
         )
 
         # Start climate control using the VehicleManager's start_climate method
