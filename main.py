@@ -87,8 +87,8 @@ def list_vehicles():
                 "name": v.name,
                 "id": v.id,
                 "model": v.model,
-                "year": v.year,
-                "is_locked": v.locked
+                "year": v.year
+            
 
             }
             for v in vehicles.values()  # Use .values() to get the Vehicle objects
