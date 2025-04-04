@@ -201,22 +201,46 @@ def lock_car():
 
 # get_vehicle_status endpoint
 
-@app.route('/get_vehicle_status', methods=['GET'])
+# Global cache
+last_valid_status = {
+    "battery_percentage": None,
+    "range_miles": None,
+    "model": None
+}
+
+@app.route("/get_vehicle_status", methods=["GET"])
 def get_vehicle_status():
+    global last_valid_status
+
     try:
-        vehicle_manager.check_and_force_update_vehicles(force_refresh_interval=60)
         vehicle = vehicle_manager.vehicles[VEHICLE_ID]
+        vehicle.update()
 
-        vehicle_status = {
-            "model": vehicle.model,
-            "battery_percentage": vehicle.ev_battery_percentage,
-            "range_miles": vehicle.ev_driving_range
-        }
+        battery = vehicle.ev_battery_percentage
+        model = vehicle.model
+        range_miles = vehicle.ev_driving_range
 
-        return jsonify(vehicle_status), 200
+        # 💡 Cache if valid range
+        if range_miles and range_miles > 0:
+            last_valid_status = {
+                "battery_percentage": battery,
+                "range_miles": range_miles,
+                "model": model
+            }
+
+        # Use cached if range is 0
+        if range_miles == 0:
+            range_miles = last_valid_status.get("range_miles")
+
+        return jsonify({
+            "battery_percentage": battery,
+            "range_miles": range_miles,
+            "model": model
+        })
+
     except Exception as e:
-        print(f"[ERROR] get_vehicle_status: {e}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify({"error": str(e)}), 500
+
 
 # get Attributes about car status endpoint
 
