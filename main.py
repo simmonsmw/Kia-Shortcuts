@@ -121,8 +121,8 @@ def start_climate():
         climate_options = ClimateRequestOptions(
             set_temp=74,  # Set temperature in Fahrenheit
             duration=15,   # Duration in minutes
-            defrost=False,
-            heating=1,
+       #     defrost=False,
+        #    heating=1,
             steering_wheel=1,         # 1 = on, 0 = off
      #       front_left_seat=1         # 1 = low, 2 = medium, 3 = high (try 1 first)    
         )
