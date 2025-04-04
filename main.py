@@ -204,7 +204,7 @@ def lock_car():
 @app.route('/get_vehicle_status', methods=['GET'])
 def get_vehicle_status():
     try:
-        vehicle_manager.check_and_force_update_vehicles(force_refresh_interval=0)
+        vehicle_manager.check_and_force_update_vehicles(force_refresh_interval=60)
         vehicle = vehicle_manager.vehicles[VEHICLE_ID]
 
         vehicle_status = {
