@@ -125,11 +125,11 @@ def start_climate():
 
         # Create ClimateRequestOptions object
         climate_options = ClimateRequestOptions(
-            set_temp=71,  # Set temperature in Fahrenheit
+            set_temp=65,  # Set temperature in Fahrenheit
             duration=15,   # Duration in minutes
        #     defrost=False,
             heating=0,
-            steering_wheel=1,        # 1 = on, 0 = off
+            steering_wheel=0,        # 1 = on, 0 = off
          #  front_left_seat=8        doesn't work at this time 4/4/25
         )
 
