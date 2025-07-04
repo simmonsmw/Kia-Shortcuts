@@ -27,9 +27,16 @@ try:
     print("Attempting to authenticate and refresh token...")
     vehicle_manager.check_and_refresh_token()
     print("Token refreshed successfully.")
-    print("Updating vehicle states...")
+print("Updating vehicle states...")
+try:
     vehicle_manager.update_all_vehicles_with_cached_state()
     print(f"Connected! Found {len(vehicle_manager.vehicles)} vehicle(s).")
+    for vid, vehicle in vehicle_manager.vehicles.items():
+        print(f"Vehicle ID: {vid}, Name: {vehicle.name}, Model: {vehicle.model}, Battery: {vehicle.ev_battery_percentage}")
+except Exception as e:
+    print(f"Failed to update vehicle state: {e}")
+    print("Continuing with empty vehicle state.")
+
 except AuthenticationError as e:
     print(f"Failed to authenticate: {e}")
     exit(1)
