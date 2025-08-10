@@ -255,6 +255,7 @@ def get_vehicle_status():
             "model": model,
             "charging": charging,
             "charge_minutes": charge_minutes  # ⏱️ Add this
+            "locked": locked
         })
 
     except Exception as e:
