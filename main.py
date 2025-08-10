@@ -235,6 +235,8 @@ def get_vehicle_status():
         range_miles = vehicle.ev_driving_range
         charging = vehicle.ev_battery_is_charging
         charge_minutes = getattr(vehicle, "ev_estimated_current_charge_duration", None)
+        locked = getattr(vehicle, "is_locked", None)
+
 
         # Cache valid range
         if range_miles and range_miles > 0:
