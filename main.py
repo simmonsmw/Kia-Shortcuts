@@ -254,7 +254,7 @@ def get_vehicle_status():
             "range_miles": range_miles,
             "model": model,
             "charging": charging,
-            "charge_minutes": charge_minutes  # ⏱️ Add this
+            "charge_minutes": charge_minutes,  # ⏱️ Add this
             "locked": locked
         })
 
